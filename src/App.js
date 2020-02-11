@@ -18,7 +18,7 @@ class App extends Component {
     this.loginStatus()
   }
   loginStatus = () => {
-    axios.get('http://localhost:3001/api/v1/user_sessions/sign_in.json')
+    axios.get('http://192.168.1.54:4000/api/v1/user_sessions/sign_in.json')
         .then(response => {
           if (response.data.logged_in) {
             this.handleLogin(response)
@@ -29,11 +29,12 @@ class App extends Component {
         .catch(error => console.log('api errors:', error))
   }
   handleLogin = (data) => {
-      debugger
     this.setState({
       isLoggedIn: true,
       user: data.user
     })
+    debugger
+    localStorage.setItem("auth_token", data.user.auth_token);
   }
   handleLogout = () => {
     this.setState({
@@ -41,6 +42,7 @@ class App extends Component {
       user: {}
     })
   }
+
   render() {
     return (
         <div>
@@ -59,12 +61,13 @@ class App extends Component {
                   )}
               />
               <Route
-                  exact path='/signup'
+                  exact path='/pin_verification'
                   render={props => (
-                      <Signup {...props} handleLogin={this.handleLogin} loggedInStatus={this.state.isLoggedIn}/>
+                      <PinVerification {...props} handleLogin={this.handleLogin} loggedInStatus={this.state.isLoggedIn}/>
                   )}
               />
                 <Route path="/countries" component={Countries} />
+              <Route path="/signup" component={Signup} />
             </Switch>
           </BrowserRouter>
         </div>

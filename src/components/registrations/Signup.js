@@ -12,6 +12,7 @@ class Signup extends Component {
             errors: ''
         };
     }
+
     handleChange = (event) => {
         const {name, value} = event.target
         this.setState({
@@ -29,33 +30,28 @@ class Signup extends Component {
             country_id: country_id
         }
 
-        axios.post('http://localhost:3009/api/v1/registrations/sign_up.json', {user},{
+        axios.post('http://192.168.1.54:4000/api/v1/registrations/sign_up.json', {user},{
             headers: {
                 'Content-Type': 'application/json',
                 "APP-IDENTIFIER": "UserApp"
             }
         })
             .then(response => {
-                debugger;
                 if (response.data.resp_title === 'Success') {
-                    this.setState({
-                        success: [response.data.message]
-                    })
-
-                    this.props.handleLogin(response.data)
                     this.redirect()
                 } else {
-                    debugger;
                     this.setState({
                         errors: [response.data.message]
                     })
                 }
             })
-
             .catch(error => console.log('api errors:', error))
+        localStorage.setItem("country_code", country_code);
+        localStorage.setItem("phone", phone);
+
     };
     redirect = () => {
-        this.props.history.push('/')
+        this.props.history.push('/pin_verification')
     }
     handleErrors = () => {
         return (
